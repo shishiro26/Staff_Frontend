@@ -42,7 +42,7 @@ interface User {
   profileImage: string;
 }
 
-const API_URL = "http://localhost:5000/api/users";
+const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/api/users`;
 
 export default function UsersPage() {
   const [users, setUsers] = useState<User[]>([]);

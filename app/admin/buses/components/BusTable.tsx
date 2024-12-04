@@ -22,10 +22,10 @@ interface Bus {
   busNumber: string;
 }
 
-const API_URL = "http://localhost:5000/api/bus";
+const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/api/bus`;
 
 export default function BusTable() {
-    const router = useRouter();
+  const router = useRouter();
   const [buses, setBuses] = useState<Bus[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -33,7 +33,7 @@ export default function BusTable() {
   const [noData, setNoData] = useState(false);
 
   // Sorting and Filtering State
- // 'all', 'zero', 'non-zero'
+  // 'all', 'zero', 'non-zero'
   const [sortKey, setSortKey] = useState<string>("busNumber");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
@@ -44,14 +44,9 @@ export default function BusTable() {
     setNoData(false);
     setBuses([]);
     try {
-
-
-      const response = await fetch(
-        `${API_URL}/owner/list/ownerId`,
-        {
-          method: "GET",
-        }
-      );
+      const response = await fetch(`${API_URL}/owner/list/ownerId`, {
+        method: "GET",
+      });
 
       if (!response.ok) throw new Error("Failed to fetch buses");
 
@@ -66,7 +61,7 @@ export default function BusTable() {
           }) => {
             // Fetch owner name
             const ownerResponse = await fetch(
-              `http://localhost:5000/api/users/${bus.ownerId}`,
+              `${process.env.NEXT_PUBLIC_API_URL}/api/users/${bus.ownerId}`,
               {
                 method: "GET",
               }
@@ -76,7 +71,7 @@ export default function BusTable() {
 
             // Fetch city names for source, destination, and rest stops
             const sourceResponse = await fetch(
-              `http://localhost:5000/api/cities/city/${bus.source}`,
+              `${process.env.NEXT_PUBLIC_API_URL}/api/cities/city/${bus.source}`,
               {
                 method: "GET",
               }
@@ -85,7 +80,7 @@ export default function BusTable() {
             const sourceCity = sourceData.city.cityName || "Unknown City"; // Fallback if city name is not available
 
             const destinationResponse = await fetch(
-              `http://localhost:5000/api/cities/city/${bus.destination}`,
+              `${process.env.NEXT_PUBLIC_API_URL}/api/cities/city/${bus.destination}`,
               {
                 method: "GET",
               }
@@ -98,7 +93,7 @@ export default function BusTable() {
             const restStopsCities = await Promise.all(
               bus.restStops.map(async (restStopId: string) => {
                 const restStopResponse = await fetch(
-                  `http://localhost:5000/api/cities/city/${restStopId}`,
+                  `${process.env.NEXT_PUBLIC_API_URL}/api/cities/city/${restStopId}`,
                   {
                     method: "GET",
                   }
@@ -143,7 +138,6 @@ export default function BusTable() {
   };
 
   // Filter handler
-
 
   return (
     <div>
@@ -254,7 +248,9 @@ export default function BusTable() {
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-700">
                     <button
-                      onClick={() => router.push(`/admin/buses/${bus.busId}/edit`)}
+                      onClick={() =>
+                        router.push(`/admin/buses/${bus.busId}/edit`)
+                      }
                       className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors text-sm"
                     >
                       Edit Details

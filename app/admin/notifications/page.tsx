@@ -26,9 +26,8 @@ interface AssistanceRequest {
   createdAt: string;
 }
 
-const API_URL = "http://localhost:5000/api/assistanceRequest";
-
 export default function AssistanceRequestsPage() {
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/api/assistanceRequest`;
   const router = useRouter();
 
   const [requests, setRequests] = useState<AssistanceRequest[]>([]);
